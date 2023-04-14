@@ -13,6 +13,10 @@ const login = async (req, res) => {
     throw new Unauthorized('Email or password is wrong')
   }
 
+  if (!user.verify) {
+    throw new Unauthorized('Email not verified')
+  }
+
   const token = jwt.sign({ id: user._id }, SECRET_KEY, { expiresIn: '1d' })
 
   await User.findByIdAndUpdate(user._id, { token })
